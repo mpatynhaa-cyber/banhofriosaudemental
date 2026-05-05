@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Efeitos do Banho Frio na Saúde Mental</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --noite:   #0f1e35;
+    --azul:    #1a4a7a;
+    --teal:    #0d7a8a;
+    --gelo:    #c8e6f0;
+    --areia:   #f0ebe0;
+    --branco:  #ffffff;
+    --cinza:   #8899aa;
+    --verde:   #1a6b4a;
+    --verm:    #8b1a2a;
+    --laran:   #b56a1a;
+    --texto:   #1a2a3a;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #050d18;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    color: var(--texto);
+  }
+
+  /* ── CONTAINER ── */
+  #deck {
+    width: 100vw; height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── SLIDES ── */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ── NAVEGAÇÃO ── */
+  #nav {
+    position: fixed;
+    bottom: 1.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    z-index: 100;
+    background: rgba(10,20,35,0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2rem;
+    padding: 0.45rem 1rem;
+  }
+  #nav button {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  #nav button:hover { color: white; }
+  #slide-counter {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.1em;
+    min-width: 3.5rem;
+    text-align: center;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .dot.active { background: var(--gelo); transform: scale(1.4); }
+
+  /* ════════════════════════════════════
+     SLIDE 1 — CAPA
+  ════════════════════════════════════ */
+  #s1 {
+    background: var(--noite);
+    overflow: hidden;
+  }
+  #s1::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 15% 50%, rgba(13,122,138,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 85% 20%, rgba(26,74,122,0.2) 0%, transparent 60%);
+  }
+  .capa-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 820px;
+    padding: 2rem;
+  }
+  .capa-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+  .capa-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.15;
+    color: var(--branco);
+    margin-bottom: 0.6rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s forwards;
+  }
+  .capa-title em {
+    font-style: italic;
+    color: var(--gelo);
+  }
+  .capa-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    margin: 1.6rem auto;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.6s forwards;
+  }
+  .capa-ref {
+    font-size: 0.85rem;
+    color: rgba(200,230,240,0.55);
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.8s forwards;
+  }
+  .capa-ref strong { color: var(--gelo); font-weight: 500; }
+
+  /* ════════════════════════════════════
+     SLIDES CONTEÚDO — base
+  ════════════════════════════════════ */
+  .slide-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 4.5rem 3.5rem;
+    background: var(--areia);
+    position: relative;
+    overflow: hidden;
+  }
+  .slide-content::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--teal), var(--azul));
+  }
+  .slide-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+  .slide-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    color: var(--noite);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  .slide-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  /* ── cards genéricos ── */
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border-left: 3px solid var(--teal);
+  }
+  .card-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .card p, .card li {
+    font-size: 0.9rem;
+    color: #2a3a4a;
+    line-height: 1.65;
+  }
+  .card ul { padding-left: 1rem; }
+  .card li { margin-bottom: 0.25rem; }
+  .card b { color: var(--noite); }
+
+  /* ── destaque box ── */
+  .box-destaque {
+    background: var(--noite);
+    border-radius: 10px;
+    padding: 1.1rem 1.6rem;
+    color: var(--gelo);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .box-destaque strong { color: white; }
+
+  /* ── dois columns ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.85rem;
+  }
+
+  /* ════════════════════════════════════
+     SLIDE 2 — CONTEXTO
+  ════════════════════════════════════ */
+  .pergunta-box {
+    background: var(--noite);
+    border-radius: 12px;
+    padding: 1.4rem 1.8rem;
+    text-align: center;
+  }
+  .pergunta-box p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 1.8vw, 1.35rem);
+    color: white;
+    line-height: 1.5;
+  }
+  .pergunta-box p em { color: var(--gelo); font-style: italic; }
+  .badge {
+    display: inline-block;
+    background: var(--teal);
+    color: white;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border-radius: 2rem;
+    margin-top: 0.8rem;
+    font-weight: 500;
+  }
+
+  /* ════════════════════════════════════
+     SLIDE 3 — MÉTODO
+  ════════════════════════════════════ */
+  .seq {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .seq-step {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 0.9rem 0.7rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    position: relative;
+  }
+  .seq-step.highlight { background: var(--noite); }
+  .seq-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+  }
+  .seq-step.highlight .seq-num { background: var(--gelo); color: var(--noite); }
+  .seq-step p {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #2a3a4a;
+    font-weight: 500;
+  }
+  .seq-step.highlight p { color: var(--gelo); }
+  .seq-arrow {
+    font-size: 1rem;
+    color: var(--cinza);
+    padding: 0 0.3rem;
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════════
+     SLIDE 4 — NEUROTRANSMISSORES
+  ════════════════════════════════════ */
+  .nt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  .nt-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    border-top: 3px solid var(--teal);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .nt-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--noite);
+  }
+  .nt-func {
+    font-size: 0.8rem;
+    color: var(--cinza);
+    line-height: 1.4;
+  }
+  .nt-efeito {
+    font-size: 0.8rem;
+    color: var(--verde);
+    font-weight: 600;
+    margin-top: 0.2rem;
+  }
+  .nt-alert {
+    font-size: 0.8rem;
+    color: var(--laran);
+    font-weight: 600;
+    margin-top: 0.2rem;
+  }
+  .aviso-box {
+    background: #fff8f0;
+    border: 1.5px solid var(--laran);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-size: 0.8rem;
+    color: var(--laran);
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* ════════════════════════════════════
+     SLIDE 5 — RESULTADOS HUMOR
+  ════════════════════════════════════ */
+  .panas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    flex: 1;
+  }
+  .panas-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+  }
+  .panas-header {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.05em;
+  }
+  .panas-pos .panas-header { background: var(--verde); }
+  .panas-neg .panas-header { background: var(--verm); }
+  .panas-body {
+    background: white;
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+  }
+  .panas-item {
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    color: #2a3a4a;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .panas-item:last-child { border-bottom: none; }
+  .panas-icon { font-size: 0.75rem; }
+  .panas-footer {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+  }
+  .panas-pos .panas-footer { background: #1a5a3a; }
+  .panas-neg .panas-footer { background: #6b0f1e; }
+
+  /* ════════════════════════════════════
+     SLIDE 6 — REDES CEREBRAIS
+  ════════════════════════════════════ */
+  .rede-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  .rede-sigla {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Playfair Display', serif;
+  }
+  .rede-def {
+    background: white;
+    padding: 0.8rem 1rem;
+    border-right: 1px solid #eee;
+  }
+  .rede-def .rede-nome {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--noite);
+    margin-bottom: 0.2rem;
+  }
+  .rede-def .rede-local {
+    font-size: 0.72rem;
+    color: var(--cinza);
+    margin-bottom: 0.35rem;
+  }
+  .rede-def .rede-func {
+    font-size: 0.78rem;
+    color: #3a4a5a;
+    line-height: 1.4;
+    font-style: italic;
+  }
+  .rede-mudanca {
+    background: #f5f8fc;
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+    color: var(--noite);
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .rede-mudanca::before {
+    content: '→ ';
+    color: var(--teal);
+    font-weight: 700;
+  }
+
+  /* ════════════════════════════════════
+     SLIDE 7 — LIMITAÇÕES
+  ════════════════════════════════════ */
+  .lim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  .lim-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+  .lim-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--laran);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lim-text h4 {
+    font-size: 0.85rem;
+    color: var(--noite);
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+  .lim-text p {
+    font-size: 0.8rem;
+    color: var(--cinza);
+    line-height: 1.45;
+  }
+
+  /* ════════════════════════════════════
+     SLIDE 8 — COMPARATIVO
+  ════════════════════════════════════ */
+  .comp-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    font-size: 0.83rem;
+  }
+  .comp-table thead tr { background: var(--noite); }
+  .comp-table th {
+    padding: 0.7rem 1rem;
+    color: var(--gelo);
+    font-weight: 600;
+    text-align: left;
+    font-size: 0.8rem;
+  }
+  .comp-table td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #eee;
+    background: white;
+    color: #2a3a4a;
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:nth-child(even) td { background: #f8fafc; }
+  .ok   { color: var(--verde);  font-weight: 600; }
+  .nok  { color: var(--verm);   font-weight: 600; }
+  .med  { color: var(--laran);  font-weight: 600; }
+  .nd   { color: var(--cinza);  }
+
+  /* ════════════════════════════════════
+     SLIDE 9 — CONCLUSÃO (escuro)
+  ════════════════════════════════════ */
+  #s9 {
+    background: var(--noite);
+    overflow: hidden;
+  }
+  #s9::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 70% at 80% 50%, rgba(13,122,138,0.15) 0%, transparent 65%);
+  }
+  .conc-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    padding: 2.5rem 3rem;
+  }
+  .conc-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 1rem;
+  }
+  .conc-frase {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    color: white;
+    line-height: 1.4;
+    margin-bottom: 2rem;
+    border-left: 3px solid var(--teal);
+    padding-left: 1.2rem;
+  }
+  .conc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .conc-item {
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .conc-item h4 {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+  }
+  .conc-item p {
+    font-size: 0.82rem;
+    color: rgba(200,220,240,0.85);
+    line-height: 1.5;
+  }
+  .conc-ref {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.25);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  /* ════════════════════════════════════
+     SLIDE 10 — REFERÊNCIAS
+  ════════════════════════════════════ */
+  .ref-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 0.85rem 1.1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .ref-bar {
+    width: 3px;
+    min-height: 100%;
+    border-radius: 2px;
+    background: var(--teal);
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+  .ref-text {
+    font-size: 0.82rem;
+    color: #2a3a4a;
+    line-height: 1.55;
+  }
+  .ref-text strong { color: var(--noite); }
+
+  /* ── animações ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .slide-content > * {
+    opacity: 0;
+    animation: none;
+  }
+  .slide.active .slide-content > * {
+    animation: fadeUp 0.5s forwards;
+  }
+  .slide.active .slide-content > *:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .slide-content > *:nth-child(2) { animation-delay: 0.15s; }
+  .slide.active .slide-content > *:nth-child(3) { animation-delay: 0.25s; }
+  .slide.active .slide-content > *:nth-child(4) { animation-delay: 0.35s; }
+  .slide.active .slide-content > *:nth-child(5) { animation-delay: 0.42s; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ══════════════════════════════════════
+       SLIDE 1 — CAPA
+  ══════════════════════════════════════ -->
+  <div class="slide active" id="s1">
+    <div class="capa-inner">
+      <p class="capa-label">Apresentação de artigo científico</p>
+      <h1 class="capa-title">Efeitos do Banho Frio<br>na <em>Saúde Mental</em></h1>
+      <div class="capa-line"></div>
+      <p class="capa-ref">
+        <strong>Yankouskaya et al. (2023)</strong> · Biology, 12(2):211<br>
+        DOI: 10.3390/biology12020211<br><br>
+        Bases Neurofisiológicas do Comportamento Humano · UFC · 2026.1
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 2 — CONTEXTO E PERGUNTA
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s2">
+    <div class="slide-content">
+      <p class="slide-label">Slide 2 de 10</p>
+      <h2 class="slide-title">Contexto e pergunta do estudo</h2>
+      <div class="slide-body">
+        <div class="card">
+          <p class="card-title">O que já se sabia</p>
+          <ul>
+            <li>A exposição ao frio ativa o sistema nervoso simpático e libera neurotransmissores como <b>dopamina, norepinefrina e beta-endorfina</b> <em style="color:var(--cinza);font-size:0.85em">(Aula 2)</em></li>
+            <li>Pessoas que nadam regularmente em água fria relatam melhora no humor e redução de sintomas depressivos</li>
+            <li>Estudos anteriores, porém, <b>não explicavam o mecanismo cerebral</b> por trás dessa melhora</li>
+          </ul>
+        </div>
+        <div class="pergunta-box">
+          <p>Quais mudanças na <em>conectividade cerebral</em> estão associadas<br>à melhora do humor após uma sessão de banho frio?</p>
+          <span class="badge">Primeiro estudo a usar fMRI para isso</span>
+        </div>
+        <div class="card" style="border-left-color:var(--laran)">
+          <p style="font-size:0.85rem;color:#2a3a4a"><b style="color:var(--laran)">fMRI</b> — ressonância magnética funcional. Mede o fluxo sanguíneo no cérebro como indicador indireto de atividade neural. <b>Não mede neurotransmissores.</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 3 — MÉTODO
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s3">
+    <div class="slide-content">
+      <p class="slide-label">Slide 3 de 10</p>
+      <h2 class="slide-title">Método</h2>
+      <div class="slide-body">
+        <div class="two-col">
+          <div class="card">
+            <p class="card-title">Participantes</p>
+            <ul>
+              <li><b>33 adultos saudáveis</b>, 20–45 anos, 16 mulheres</li>
+              <li>Sem experiência em água fria nos últimos <b>12–18 meses</b></li>
+              <li>Sem transtornos, sem medicação, sem dor crônica</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p class="card-title">Intervenção</p>
+            <ul>
+              <li>Imersão até as clavículas</li>
+              <li>Temperatura: <b>19,93°C ± 0,13°C</b></li>
+              <li>Duração: <b>5 minutos</b></li>
+              <li>Monitoramento por ECG em tempo real</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:0.7rem">Sequência do experimento</p>
+          <div class="seq">
+            <div class="seq-step">
+              <div class="seq-num">1</div>
+              <p>PANAS<br>pré‑banho</p>
+            </div>
+            <div class="seq-arrow">›</div>
+            <div class="seq-step">
+              <div class="seq-num">2</div>
+              <p>fMRI<br>pré‑banho<br><small style="color:var(--cinza)">(13 min)</small></p>
+            </div>
+            <div class="seq-arrow">›</div>
+            <div class="seq-step highlight">
+              <div class="seq-num">3</div>
+              <p>BANHO<br>FRIO<br><small style="color:rgba(200,230,240,0.7)">(5 min)</small></p>
+            </div>
+            <div class="seq-arrow">›</div>
+            <div class="seq-step">
+              <div class="seq-num">4</div>
+              <p>fMRI<br>pós‑banho<br><small style="color:var(--cinza)">(13 min)</small></p>
+            </div>
+            <div class="seq-arrow">›</div>
+            <div class="seq-step">
+              <div class="seq-num">5</div>
+              <p>PANAS<br>pós‑banho</p>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--cinza);text-align:center;font-style:italic">Medir antes → intervir → medir depois — o que permite atribuir as mudanças ao banho</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 4 — NEUROTRANSMISSORES
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s4">
+    <div class="slide-content">
+      <p class="slide-label">Slide 4 de 10</p>
+      <h2 class="slide-title">O que o frio libera — neurotransmissores</h2>
+      <div class="slide-body">
+        <div class="card" style="border-left-color:var(--cinza)">
+          <p style="font-size:0.85rem;color:#2a3a4a">O artigo cita, na introdução, que a exposição ao frio desencadeia liberação de neurotransmissores que regulam humor e bem-estar. <b>Não foram medidos diretamente</b> — servem como mecanismo explicativo para os resultados observados.</p>
+        </div>
+        <div class="nt-grid">
+          <div class="nt-card">
+            <p class="nt-name">Norepinefrina (Noradrenalina)</p>
+            <p class="nt-func">Neurotransmissor do alerta, atenção e resposta ao estresse. Sobe rapidamente nos primeiros minutos de imersão.</p>
+            <p class="nt-efeito">→ Sensação de foco e energia</p>
+          </div>
+          <div class="nt-card">
+            <p class="nt-name">Dopamina</p>
+            <p class="nt-func">Ligada à motivação, recompensa e prazer. Sistema que nos faz sentir que valeu o esforço.</p>
+            <p class="nt-efeito">→ Sensação de conquista e disposição</p>
+          </div>
+          <div class="nt-card">
+            <p class="nt-name">Beta-endorfina</p>
+            <p class="nt-func">Analgésico natural do corpo. Reduz a percepção de dor e gera estado de bem-estar geral.</p>
+            <p class="nt-efeito">→ Leveza e bem-estar pós-banho</p>
+          </div>
+          <div class="nt-card">
+            <p class="nt-name">Cortisol</p>
+            <p class="nt-func">Hormônio do estresse — eixo hipotálamo‑hipófise‑adrenal. Sobe durante a imersão.</p>
+            <p class="nt-alert">⚠ Cai 12h depois — dado do Cain et al. (2025)</p>
+          </div>
+        </div>
+        <div class="aviso-box">
+          Déficits nesses neurotransmissores estão associados a depressão, ansiedade e distúrbios emocionais (citado no artigo)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 5 — RESULTADOS HUMOR
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s5">
+    <div class="slide-content">
+      <p class="slide-label">Slide 5 de 10</p>
+      <h2 class="slide-title">Resultados — Humor (PANAS)</h2>
+      <div class="slide-body">
+        <p style="font-size:0.82rem;color:var(--cinza);font-style:italic">PANAS: Positive and Negative Affect Schedule · 20 itens · afeto = estado emocional presente, não carinho</p>
+        <div class="panas-grid">
+          <div class="panas-card panas-pos">
+            <div class="panas-header">AFETO POSITIVO  ↑</div>
+            <div class="panas-body">
+              <div class="panas-item"><span class="panas-icon">✓</span> Ativo</div>
+              <div class="panas-item"><span class="panas-icon">✓</span> Alerta</div>
+              <div class="panas-item"><span class="panas-icon">✓</span> Atencioso</div>
+              <div class="panas-item"><span class="panas-icon">✓</span> Inspirado</div>
+              <div class="panas-item"><span class="panas-icon">✓</span> Orgulhoso</div>
+            </div>
+            <div class="panas-footer">Aumentou · p &lt; 0,001</div>
+          </div>
+          <div class="panas-card panas-neg">
+            <div class="panas-header">AFETO NEGATIVO  ↓</div>
+            <div class="panas-body">
+              <div class="panas-item"><span class="panas-icon">↓</span> Angustiado</div>
+              <div class="panas-item"><span class="panas-icon">↓</span> Nervoso</div>
+              <div class="panas-item"><span class="panas-icon">↓</span> Irritável</div>
+              <div class="panas-item"><span class="panas-icon">↓</span> Com medo</div>
+              <div class="panas-item"><span class="panas-icon">↓</span> Culpado</div>
+            </div>
+            <div class="panas-footer">Diminuiu · p = 0,005</div>
+          </div>
+        </div>
+        <div class="box-destaque">
+          <strong>Modelo de bivalência:</strong> os dois sistemas mudaram de forma <strong>independente</strong> — o banho não apagou as emoções ruins, ele fortaleceu as boas. As negativas cederam espaço.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 6 — REDES CEREBRAIS
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s6">
+    <div class="slide-content">
+      <p class="slide-label">Slide 6 de 10</p>
+      <h2 class="slide-title">Resultados — Redes cerebrais (fMRI)</h2>
+      <div class="slide-body">
+        <div style="display:flex;flex-direction:column;gap:0.7rem">
+          <div class="rede-row">
+            <div class="rede-sigla" style="background:var(--azul)">DMN</div>
+            <div class="rede-def">
+              <p class="rede-nome">Rede de Modo Padrão</p>
+              <p class="rede-local">Lobo frontal (parte interna)</p>
+              <p class="rede-func">Ativa no repouso — pensamentos sobre si mesmo, autorreflexão, devaneio</p>
+            </div>
+            <div class="rede-mudanca">Passou a se integrar mais com as redes de atenção — reflexão interna + foco externo</div>
+          </div>
+          <div class="rede-row">
+            <div class="rede-sigla" style="background:var(--teal)">SN</div>
+            <div class="rede-def">
+              <p class="rede-nome">Rede de Saliência</p>
+              <p class="rede-local">Lobo frontal</p>
+              <p class="rede-func">Decide o que merece atenção, integra emoção e cognição</p>
+            </div>
+            <div class="rede-mudanca">Maior acoplamento com a DMN — melhor regulação emocional</div>
+          </div>
+          <div class="rede-row">
+            <div class="rede-sigla" style="background:var(--noite)">FPN</div>
+            <div class="rede-def">
+              <p class="rede-nome">Rede Frontoparietal</p>
+              <p class="rede-local">Lobo frontal + lobo parietal</p>
+              <p class="rede-func">Controle consciente da atenção e tomada de decisão</p>
+            </div>
+            <div class="rede-mudanca">Mais conectada com rede de atenção e visual — explica o alerta e foco relatados</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
+          <div class="card" style="border-left-color:var(--verde)">
+            <p style="font-size:0.82rem;color:#2a3a4a"><b style="color:var(--verde)">Afeto positivo:</b> efeito focal — poucas conexões, fortes, presentes em <b>90%+</b> dos participantes</p>
+          </div>
+          <div class="card" style="border-left-color:var(--cinza)">
+            <p style="font-size:0.82rem;color:#2a3a4a"><b style="color:var(--cinza)">Afeto negativo:</b> efeito difuso — desaparece ao controlar o positivo matematicamente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 7 — TRANSDUÇÃO E CHOQUE
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s7">
+    <div class="slide-content">
+      <p class="slide-label">Slide 7 de 10</p>
+      <h2 class="slide-title">Como o frio chega ao cérebro</h2>
+      <div class="slide-body">
+        <p style="font-size:0.82rem;color:var(--cinza);font-style:italic">O caminho do estímulo sensorial — do contato com a pele até a resposta cerebral <em style="color:var(--teal)">(Aulas 3 e 4)</em></p>
+        <div class="seq" style="gap:0">
+          <div class="seq-step" style="background:#e8f4f0">
+            <div class="seq-num">1</div>
+            <p style="font-size:0.75rem"><b>Estímulo</b><br>Água fria toca a pele</p>
+          </div>
+          <div class="seq-arrow">›</div>
+          <div class="seq-step" style="background:#ddeef8">
+            <div class="seq-num">2</div>
+            <p style="font-size:0.75rem"><b>Sensação</b><br>Termorreceptores detectam</p>
+          </div>
+          <div class="seq-arrow">›</div>
+          <div class="seq-step" style="background:#d0e6f5">
+            <div class="seq-num">3</div>
+            <p style="font-size:0.75rem"><b>Transdução</b><br>Converte em sinal elétrico</p>
+          </div>
+          <div class="seq-arrow">›</div>
+          <div class="seq-step" style="background:#c0d8f0">
+            <div class="seq-num">4</div>
+            <p style="font-size:0.75rem"><b>Via neural</b><br>Sinal ao cérebro via tálamo</p>
+          </div>
+          <div class="seq-arrow">›</div>
+          <div class="seq-step highlight">
+            <div class="seq-num">5</div>
+            <p style="font-size:0.75rem"><b>Resposta</b><br>SN simpático ativado</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <p class="card-title">Choque ao frio — resposta imediata</p>
+            <ul>
+              <li>Gaspejo inspiratório involuntário</li>
+              <li>Frequência cardíaca sobe rapidamente</li>
+              <li>Vasos sanguíneos se contraem</li>
+              <li>Hiperventilação — dura 3–5 minutos</li>
+              <li>Efeitos residuais simpáticos: 20–30 min</li>
+            </ul>
+          </div>
+          <div class="card">
+            <p class="card-title">Por que isso importa para o estudo</p>
+            <p>Todos os participantes <b>confirmaram</b> ter experimentado o choque — verificado pelo ECG. Isso valida que a intervenção foi efetiva. O fMRI pós-banho foi feito enquanto esses efeitos ainda estavam presentes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 8 — LIMITAÇÕES
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s8">
+    <div class="slide-content">
+      <p class="slide-label">Slide 8 de 10</p>
+      <h2 class="slide-title">Discussão e limitações</h2>
+      <div class="slide-body">
+        <div class="lim-grid">
+          <div class="lim-card">
+            <div class="lim-num">1</div>
+            <div class="lim-text">
+              <h4>Sem grupo controle</h4>
+              <p>Não é possível descartar fatores como expectativa de melhora ou contato social durante o experimento</p>
+            </div>
+          </div>
+          <div class="lim-card">
+            <div class="lim-num">2</div>
+            <div class="lim-text">
+              <h4>Neurotransmissores não foram medidos</h4>
+              <p>A ligação entre dopamina/norepinefrina e as mudanças nas redes cerebrais é uma hipótese — não demonstrada diretamente</p>
+            </div>
+          </div>
+          <div class="lim-card">
+            <div class="lim-num">3</div>
+            <div class="lim-text">
+              <h4>Participantes estreantes</h4>
+              <p>Todos sem experiência prévia — não sabemos se os efeitos se mantêm com a prática regular</p>
+            </div>
+          </div>
+          <div class="lim-card">
+            <div class="lim-num">4</div>
+            <div class="lim-text">
+              <h4>Fatores psicológicos não isolados</h4>
+              <p>O senso de conquista por aguentar o banho pode ter contribuído para a melhora — ainda precisa ser investigado</p>
+            </div>
+          </div>
+        </div>
+        <div class="box-destaque" style="text-align:center;font-size:0.88rem">
+          Apresentar limitações não é ponto fraco — é rigor científico
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 9 — COMPARATIVO CAIN
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s9b">
+    <div class="slide-content">
+      <p class="slide-label">Slide 9 de 10</p>
+      <h2 class="slide-title">Contexto adicional — Cain et al. (2025)</h2>
+      <div class="slide-body">
+        <p style="font-size:0.82rem;color:var(--cinza);font-style:italic">Revisão sistemática com meta-análise · 11 estudos · 3.177 participantes · temperaturas 7–15°C</p>
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Desfecho</th>
+              <th>Banho frio · 20°C (Yankouskaya)</th>
+              <th>Banho de gelo · 7–15°C (Cain)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Humor</b></td>
+              <td class="ok">Melhora significativa ✓</td>
+              <td class="nok">Sem efeito significativo</td>
+            </tr>
+            <tr>
+              <td><b>Estresse</b></td>
+              <td class="ok">Reduz após o banho</td>
+              <td class="med">Reduz apenas 12h depois</td>
+            </tr>
+            <tr>
+              <td><b>Inflamação</b></td>
+              <td class="nd">Não avaliado</td>
+              <td class="nok">Aumenta inicialmente</td>
+            </tr>
+            <tr>
+              <td><b>Sono</b></td>
+              <td class="nd">Não avaliado</td>
+              <td class="ok">Melhora ✓</td>
+            </tr>
+            <tr>
+              <td><b>Qualidade de vida</b></td>
+              <td class="nd">Não avaliado</td>
+              <td class="ok">Melhora em 30 dias ✓</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="box-destaque" style="font-size:0.85rem">
+          Vendas de banheiras de gelo na Amazon: de &lt; 1.000 → &gt; 90.000 unidades em 1 ano — a ciência ainda não acompanhou essa popularidade
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 10 — CONCLUSÃO
+  ══════════════════════════════════════ -->
+  <div class="slide" id="s10">
+    <div style="background:var(--noite);width:100%;height:100%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 80% 50%, rgba(13,122,138,0.15) 0%, transparent 65%)"></div>
+      <div class="conc-inner">
+        <p class="conc-label">Conclusão · Slide 10 de 10</p>
+        <p class="conc-frase">Uma única sessão de banho frio altera a conectividade cerebral e melhora o humor — de forma mensurável.</p>
+        <div class="conc-grid">
+          <div class="conc-item">
+            <h4>Humor</h4>
+            <p>Afeto positivo ↑ e negativo ↓ — de forma independente, confirmando o modelo de bivalência</p>
+          </div>
+          <div class="conc-item">
+            <h4>Cérebro</h4>
+            <p>DMN, SN e FPN ficam mais integradas — alerta, foco e regulação emocional melhoram</p>
+          </div>
+          <div class="conc-item">
+            <h4>Limitações</h4>
+            <p>Sem grupo controle · neurotransmissores não medidos · replicação necessária</p>
+          </div>
+          <div class="conc-item">
+            <h4>Próximos passos</h4>
+            <p>Potencial terapêutico para depressão — mas mais estudos com amostras maiores são necessários</p>
+          </div>
+        </div>
+        <p class="conc-ref">Yankouskaya et al. (2023) · Biology 12(2):211 · DOI: 10.3390/biology12020211</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAVEGAÇÃO -->
+<div id="nav">
+  <button id="btn-prev" onclick="changeSlide(-1)">‹</button>
+  <div id="dots"></div>
+  <span id="slide-counter">1 / 10</span>
+  <button id="btn-next" onclick="changeSlide(1)">›</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slide-counter');
+  const dotsEl  = document.getElementById('dots');
+  let current = 0;
+
+  // Criar dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    document.querySelectorAll('.dot')[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, slides.length - 1));
+    slides[current].classList.add('active');
+    document.querySelectorAll('.dot')[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+  }
+
+  function changeSlide(dir) { goTo(current + dir); }
+
+  // Teclado
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault(); changeSlide(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); changeSlide(-1);
+    } else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+</script>
+</body>
+</html>
